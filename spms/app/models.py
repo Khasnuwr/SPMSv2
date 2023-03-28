@@ -26,4 +26,11 @@ class Program_T(models.Model):
         return str(self.programName)
 # Course Table
 class Course_T(models.Model):
-    pass
+    courseID = models.CharField(max_length=10, primary_key=True, null=False, blank=False)
+    courseName = models.CharField(max_length=255, null=False, blank=False)
+    program = models.ForeignKey(Program_T, on_delete=models.CASCADE)
+    creditNo = models.IntegerField()
+    prerequisiteCourse = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.courseID)
