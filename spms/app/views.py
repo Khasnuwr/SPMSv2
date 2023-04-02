@@ -29,7 +29,6 @@ def login_user(request):
 # Displaying Home Page Function
 def home(request):
     if request.user.is_authenticated:
-
         return render(request, 'home/home.html', {})
     else:
         return redirect('login')
