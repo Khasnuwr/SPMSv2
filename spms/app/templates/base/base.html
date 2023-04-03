@@ -7,6 +7,8 @@
     <title>SPMSv2{% block title %}{% endblock title %}</title>
     <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <script src='https://cdn.plot.ly/plotly-2.20.0.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
 
@@ -29,16 +31,16 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">PLO Achievement Table</a>
+                    <a class="nav-link" href="{% url 'plo' %}">PLO Achievement Table</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Course Wise CO Analysis</a>
+                    <a class="nav-link" href="{% url 'co-course' %}">Course Wise CO Analysis</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">PLO Analysis</a>
                   </li>
                 {% endif %}
-                {% if user.role == 'Faculty' %}
+                {% if user.role == 'Faculty' or user.role == 'Admin' %}
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Faculty

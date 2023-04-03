@@ -32,3 +32,23 @@ def home(request):
         return render(request, 'home/home.html', {})
     else:
         return redirect('login')
+
+# Displaying Student Wise PLO Table (ONLY Student will access it)
+def studentWisePlo(request):
+    if request.user.is_authenticated:
+        if request.user.role == 'Student':
+            return render(request, 'student/ploTable.html', {})
+        else:
+            return redirect('home')
+    else:
+        return redirect('login')
+
+# Displaying Course Wise CO Analysis
+def studentCourseWiseCO(request):
+    if request.user.is_authenticated:
+        if request.user.role == 'Student':
+            return render(request, 'student/coCourse.html', {})
+        else:
+            return redirect('home')
+    else:
+        return redirect('login')
