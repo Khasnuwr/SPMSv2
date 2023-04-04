@@ -9,4 +9,6 @@ urlpatterns = [
 
     path('plo-table/', studentWisePlo, name='plo'),
     path('co-course/', studentCourseWiseCO, name='co-course'),
+
+    path('co-input/', coInputForm, name='co-input')
 ]

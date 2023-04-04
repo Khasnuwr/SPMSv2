@@ -52,3 +52,13 @@ def studentCourseWiseCO(request):
             return redirect('home')
     else:
         return redirect('login')
+
+# Displaying CO input Form For Faculty
+def coInputForm(request):
+    if request.user.is_authenticated:
+        if request.user.role == 'Faculty':
+            return render(request, 'faculty/coInputForm.html', {})
+        else:
+            return redirect('home')
+    else:
+        return redirect('login')

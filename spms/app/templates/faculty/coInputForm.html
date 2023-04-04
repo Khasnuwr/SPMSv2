@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+{% block title %} | Course Wise CO {% endblock title %}
+{% block content %} 
+   <div class="container-fluid py-3">
+   </div>
+   <section class="container my-2 bg-dark w-50 text-light p-2">
+    <form class="row g-3 p-3">
+          <div class="col-md-6">
+            <label for="validationDefault01" class="form-label">Student ID</label>
+            <input type="text" class="form-control" id="validationDefault01" value="" required>
+          </div>
+          <div class="col-md-6">
+            <label for="validationDefault01" class="form-label">Educational Year</label>
+            <input type="number" class="form-control" id="validationDefault01" value="" required>
+          </div>
+          <div class="col-md-6">
+            <label for="inputState" class="form-label">Educational Semester</label>
+            <select id="inputState" class="form-select">
+              <option>Select Semester</option>
+              <option>Spring</option>
+              <option>Summer</option>
+              <option>Autumn</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="inputState" class="form-label">Enrolled course</label>
+            <select id="inputState" class="form-select">
+              <option>Select Course</option>
+              <option>CSE303</option>
+              <option>CSE301</option>
+              <option>CSE316</option>
+              <option>CSE317</option>
+              <option>CSE307</option>
+              <option>CSE309</option>
+            </select>
+          </div>
+        <div class="col-md-6">
+          <label for="inputCity" class="form-label">Enrolled Section</label>
+          <input type="number" class="form-control" id="inputCity">
+        </div>
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Obtained Grade</label>
+          <select id="inputState" class="form-select">
+            <option>Select Grade</option>
+            <option>A</option>
+            <option>A-</option>
+            <option>B+</option>
+            <option>B</option>
+            <option>B-</option>
+            <option>C+</option>
+            <option>C</option>
+            <option>C-</option>
+            <option>D+</option>
+            <option>D</option>
+            <option>F</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+   </section>
+{% endblock content %} 
