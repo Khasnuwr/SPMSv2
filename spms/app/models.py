@@ -40,6 +40,7 @@ class User_T(AbstractUser):
         ('Faculty', 'Faculty'),
         ('Student', 'Student'),
     )
+    username = models.CharField(max_length=255, primary_key=True)
     role = models.CharField(max_length=30, choices=ROLES_CHOICES)
     phone = models.CharField(max_length=15, null=True, blank=True)
     address = models.CharField(max_length=30, null=True, blank=True)
@@ -55,9 +56,9 @@ class Section_T(models.Model):
     sectionNo = models.IntegerField(default=1)
     semester = models.CharField(max_length=30, choices=SEMESTER_CHOICES)
     course = models.ForeignKey(Course_T, on_delete=models.CASCADE, default='N/A')
-    faculty = models.ForeignKey(User_T, on_delete=models.CASCADE, default=0)
+    faculty = models.ForeignKey(User_T, on_delete=models.CASCADE)
     def __str__(self):
-        return str(self.sectionNo)+ ' ' +str(self.course)+ ' '+str(self.semester)
+        return str(self.course)+ ' '+str(self.sectionNo)+ ' ' +str(self.semester)
 # Enrollment Table
 class Enrollment_T(models.Model):
     SEMESTER_CHOICES=(
@@ -105,3 +106,14 @@ class Evaluation_T(models.Model):
     enrollment = models.ForeignKey(Enrollment_T, on_delete=models.CASCADE)
     def __str__(self):
         return str(self.evaluationNo)+' '+str(self.assessment)+' '+str(self.enrollment)
+# Course GPA
+class CourseGrade_T(models.Model):
+    studentID = models.ForeignKey(User_T, on_delete = models.CASCADE)
+    eduYear = models.CharField(max_length=4)
+    eduSemester = models.CharField(max_length=25)
+    course = models.ForeignKey(Course_T, on_delete=models.CASCADE)
+    section = models.IntegerField(default=1)
+    grade = models.CharField(max_length=4)
+
+    def __str__(self):
+        return str(self.studentID)+' '+str(self.course)+' '+str(self.grade)

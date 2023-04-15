@@ -2,20 +2,29 @@
 {% block title %} | Course Wise CO {% endblock title %}
 {% block content %} 
    <div class="container-fluid py-3">
-   </div>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{success}} alert-dismissible fade show" role="alert">
+          {{message}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
    <section class="container my-2 bg-dark w-50 text-light p-2">
-    <form class="row g-3 p-3">
+    
+    <form action="" method="POST" class="row g-3 p-3">
+          {% csrf_token %}
           <div class="col-md-6">
             <label for="validationDefault01" class="form-label">Student ID</label>
-            <input type="text" class="form-control" id="validationDefault01" value="" required>
+            <input type="text" name="studentID" class="form-control" id="validationDefault01" value="" required>
           </div>
           <div class="col-md-6">
             <label for="validationDefault01" class="form-label">Educational Year</label>
-            <input type="number" class="form-control" id="validationDefault01" value="" required>
+            <input type="number" name="eduYear" class="form-control" id="validationDefault01" value="" required>
           </div>
           <div class="col-md-6">
             <label for="inputState" class="form-label">Educational Semester</label>
-            <select id="inputState" class="form-select">
+            <select id="inputState" name="eduSemester" class="form-select">
               <option>Select Semester</option>
               <option>Spring</option>
               <option>Summer</option>
@@ -24,23 +33,25 @@
           </div>
           <div class="col-md-6">
             <label for="inputState" class="form-label">Enrolled course</label>
-            <select id="inputState" class="form-select">
-              <option>Select Course</option>
-              <option>CSE303</option>
+            <select id="inputState" name="course" class="form-select">
+              {% for course in courses %}
+                <option value="{{ course }}">{{ course }}</option>
+              {% endfor %}
+              <!-- <option>CSE303</option>
               <option>CSE301</option>
               <option>CSE316</option>
               <option>CSE317</option>
               <option>CSE307</option>
-              <option>CSE309</option>
+              <option>CSE309</option> -->
             </select>
           </div>
         <div class="col-md-6">
           <label for="inputCity" class="form-label">Enrolled Section</label>
-          <input type="number" class="form-control" id="inputCity">
+          <input type="number" name="section" class="form-control" id="inputCity">
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Obtained Grade</label>
-          <select id="inputState" class="form-select">
+          <select id="inputState" name="grade" class="form-select">
             <option>Select Grade</option>
             <option>A</option>
             <option>A-</option>
@@ -60,4 +71,6 @@
         </div>
       </form>
    </section>
+
+  </div>
 {% endblock content %} 

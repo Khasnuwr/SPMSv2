@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import *
+from .forms import *
 
 
 # Logout User Function
@@ -54,10 +55,25 @@ def studentCourseWiseCO(request):
         return redirect('login')
 
 # Displaying CO input Form For Faculty
-def coInputForm(request):
+def gradeInputForm(request):
     if request.user.is_authenticated:
-        if request.user.role == 'Faculty':
-            return render(request, 'faculty/coInputForm.html', {})
+        if request.user.role == 'Faculty': 
+            success = 'success'
+            form = GradeInputForm()
+            if request.method == 'POST':
+                form = GradeInputForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.add_message(
+                        request, messages.SUCCESS, 'GRADE Submission Successful')
+                else:
+                    success = 'danger'
+                    messages.add_message(
+                        request, messages.SUCCESS, 'GRADE Submission Failed!')
+                        
+            return render(request, 'faculty/coInputForm.html', {    'form':form,
+                                                                    'courses': Course_T.objects.all(),
+                                                                    'success': success})
         else:
             return redirect('home')
     else:
