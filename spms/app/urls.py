@@ -10,5 +10,6 @@ urlpatterns = [
     path('plo-table/', studentWisePlo, name='plo'),
     path('co-course/', studentCourseWiseCO, name='co-course'),
 
-    path('co-input/', gradeInputForm, name='co-input')
+    path('co-input/', gradeInputForm, name='co-input'),
+    path('grade-input-csv/', gradeInputFromCSV, name='grade-input-csv'),
 ]

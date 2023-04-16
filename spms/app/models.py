@@ -40,7 +40,6 @@ class User_T(AbstractUser):
         ('Faculty', 'Faculty'),
         ('Student', 'Student'),
     )
-    username = models.CharField(max_length=255, primary_key=True)
     role = models.CharField(max_length=30, choices=ROLES_CHOICES)
     phone = models.CharField(max_length=15, null=True, blank=True)
     address = models.CharField(max_length=30, null=True, blank=True)
@@ -67,7 +66,7 @@ class Enrollment_T(models.Model):
         ('Autumn', 'Autumn'),
     )
     enrollmentID = models.AutoField(primary_key=True)
-    student = models.ForeignKey(User_T, on_delete=models.CASCADE)
+    student = models.ForeignKey(User_T, on_delete=models.CASCADE, default=1)
     section = models.ForeignKey(Section_T, on_delete=models.CASCADE)
     semester = models.CharField(max_length=30, choices=SEMESTER_CHOICES)
     year = models.CharField(max_length=4)

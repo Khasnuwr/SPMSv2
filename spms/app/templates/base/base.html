@@ -44,7 +44,8 @@
                   </li>
                 {% endif %}
                 {% if user.role == 'Faculty' or user.role == 'Admin' %}
-                  <li class="nav-item" ><a class="nav-link" href="{% url 'co-input' %}">CO Input</a></li>
+                  <li class="nav-item" ><a class="nav-link" href="{% url 'co-input' %}">Grade Input</a></li>
+                  <li class="nav-item" ><a class="nav-link" href="{% url 'grade-input-csv' %}">Grade Input from CSV</a></li>
                   <li class="nav-item"><a class="nav-link" href="#">CO Analysis</a></li>
                   <li class="nav-item"> <a class="nav-link" href="#">PLO Analysis</a></li>
                   <li class="nav-item"> <a class="nav-link" href="#">Evaluation</a></li>
