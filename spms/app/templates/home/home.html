@@ -1,5 +1,48 @@
 {% extends 'base/base.html' %}
 {% block title %} | Home {% endblock title %}
 {% block content %} 
-    <p>{{user}}</p>
+    <h5>Dashboard</h5>
+    <p>Welcome, {{user.first_name}} {{user.last_name}}</p>
+    {% if user.role == 'Student' %}
+    <div class="container text-center">
+        <div class="row">
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Result</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">Earned CGPA: {{cgpa}} </h6>
+                  <p class="card-text">Earned Credit: {{earned_credit}}</p>
+                </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Academic Information</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">Department Name: {{user.department}}</h6>
+                  <p class="card-text">School Name: {{user.department.schoolID}}</p>
+                </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Registration Information</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">-</h6>
+                    <p class="card-text">-</p>
+                </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Scholarship</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">-</h6>
+                    <p class="card-text">-</p>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
 {% endblock content %}

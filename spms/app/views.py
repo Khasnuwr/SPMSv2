@@ -32,6 +32,60 @@ def login_user(request):
 # Displaying Home Page Function
 def home(request):
     if request.user.is_authenticated:
+        if request.user.role == 'Student':
+            grades = CourseGrade_T.objects.filter(studentID=request.user)
+            attempted_credit = 0
+            total_cum_credit = 0
+
+            for grade in grades:
+                if grade.grade == 'A':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*4.00)
+                elif grade.grade == 'A-':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*3.70)
+                elif grade.grade == 'B+':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*3.30)
+                elif grade.grade == 'B':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*3.00)
+                elif grade.grade == 'B-':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*2.70)
+                elif grade.grade == 'C+':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*2.30)
+                elif grade.grade == 'C':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*2.00)
+                elif grade.grade == 'C-':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*1.70)
+                elif grade.grade == 'D+':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*1.30)
+                elif grade.grade == 'D':
+                    course = Course_T.objects.get(pk=grade.course)
+                    attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*1.00)
+                elif grade.grade == 'F':
+                    #course = Course_T.objects.get(pk=grade.course)
+                    #attempted_credit+=int(course.creditNo)
+                    total_cum_credit+=float(int(course.creditNo)*0.00)
+            cgpa = total_cum_credit/attempted_credit
+            return render(request, 'home/home.html', {  'cgpa': cgpa,
+                                                        'earned_credit': attempted_credit})
+                
         return render(request, 'home/home.html', {})
     else:
         return redirect('login')
@@ -81,7 +135,7 @@ def gradeInputForm(request):
                     messages.add_message(
                         request, messages.SUCCESS, 'GRADE Submission Failed!')
                         
-            return render(request, 'faculty/coInputForm.html', {    'form':form,
+            return render(request, 'faculty/gradeInputForm.html', {    'form':form,
                                                                     'courses': Course_T.objects.all(),
                                                                     'success': success})
         else:
