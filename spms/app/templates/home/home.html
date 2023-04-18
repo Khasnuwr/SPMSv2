@@ -43,11 +43,31 @@
             </div>
           </div>
         </div>
-        <div></div>
+        
+        <div class="row">
+          <hr style="margin-top: 2rem; margin-bottom: 2rem;">
+          <a class="btn btn-success" href="{% url 'transcript' %}">Get Transcript</a>
+          <hr style="margin-top: 2rem; margin-bottom: 2rem;">
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">Overall CO Analysis</h5>
+                  
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" >
+              <div class="card-body">
+                  <h5 class="card-title">Course-wise CO Analysis</h5>
+                  
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="row">
-        <hr style="margin-top: 2rem; margin-bottom: 2rem;">
-        <a class="btn btn-success" href="{% url 'transcript' %}">Get Transcript</a>
-      </div>
+      
     {% endif %}
 {% endblock content %}
