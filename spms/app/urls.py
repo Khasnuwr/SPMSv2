@@ -12,4 +12,7 @@ urlpatterns = [
 
     path('co-input/', gradeInputForm, name='co-input'),
     path('grade-input-csv/', gradeInputFromCSV, name='grade-input-csv'),
+
+    # Student Download Transcript
+    path('transcript/', genTranscript, name='transcript')
 ]

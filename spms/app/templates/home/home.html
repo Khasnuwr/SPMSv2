@@ -4,7 +4,7 @@
     <h5>Dashboard</h5>
     <p>Welcome, {{user.first_name}} {{user.last_name}}</p>
     {% if user.role == 'Student' %}
-    <div class="container text-center">
+      <div class="container text-center">
         <div class="row">
           <div class="col">
             <div class="card" style="width: 18rem;">
@@ -43,6 +43,11 @@
             </div>
           </div>
         </div>
+        <div></div>
+      </div>
+      <div class="row">
+        <hr style="margin-top: 2rem; margin-bottom: 2rem;">
+        <a class="btn btn-success" href="{% url 'transcript' %}">Get Transcript</a>
       </div>
     {% endif %}
 {% endblock content %}
