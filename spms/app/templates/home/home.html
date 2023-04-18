@@ -50,19 +50,71 @@
           <hr style="margin-top: 2rem; margin-bottom: 2rem;">
         </div>
         <div class="row">
-          <div class="col">
-            <div class="card">
+          <div class="col" style="width: 50%;">
+            <div class="card" >
               <div class="card-body">
-                  <h5 class="card-title">Overall CO Analysis</h5>
+                  <h5 class="card-title">PLO Analysis</h5>
+                  <div>
+                    <canvas id="myChart"></canvas>
+                  </div>
+                
+                  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                   
+                  <script>
+                      // Get the canvas element
+                      const canvas = document.getElementById('myChart');
+          
+                      // Create the data for the spider chart
+                      const data = {
+                      labels: ['PLO1', 'PLO2', 'PLO3', 'PLO4', 'PLO5', 'PLO6', 'PLO7', 'PLO8', 'PLO9', 'PLO10', 'PLO11', 'PLO12'],
+                      datasets: [{
+                          label: 'PLO Percentage',
+                          data: [65, 65, 65, 65, 25, 65, 75 , 85, 10, 15, 32, 36],
+                          fill: true,
+                          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                          borderColor: 'rgb(255, 99, 132)',
+                          pointBackgroundColor: 'rgb(255, 99, 132)',
+                          pointBorderColor: '#fff',
+                          pointHoverBackgroundColor: '#fff',
+                          pointHoverBorderColor: 'rgb(255, 99, 132)',
+                          
+                      }]
+                      };
+          
+          
+                      // Create the spider chart
+                      const myChart = new Chart(canvas, {
+                      type: 'radar',
+                      data: data,
+                      options: {
+                              elements: {
+                              line: {
+                                  borderWidth: 3
+                              }
+                              }
+                          },
+                      
+                      });
+          
+                  
+          
+                  </script>
               </div>
             </div>
           </div>
-          <div class="col">
+          <div class="col" style="width: 50%;">
             <div class="card" >
               <div class="card-body">
                   <h5 class="card-title">Course-wise CO Analysis</h5>
-                  
+                  <form action="" method="POST" class="row g-3 p-3"> {% csrf_token %}
+                      <div class="col-md-12">
+                        <input class="form-control" placeholder="Course Name" type="text" name="searchCourse" id="">
+                      </div>
+                      <div class="col-12">
+                        <button class="btn btn-success" type="submit">Search</button>
+                      </div>
+                        
+                  </form>
               </div>
             </div>
           </div>
