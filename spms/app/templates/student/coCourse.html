@@ -2,50 +2,50 @@
 {% block title %} | Course Wise CO {% endblock title %}
 {% block content %} 
     <center><h4>Percentage of CO Achieved</h4></center>
-    <div>
-        <canvas id="myChart"></canvas>
-      </div>
-      
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      
-      <script>
-        // Get the canvas element
-        const canvas = document.getElementById('myChart');
-
-        // Create the data for the spider chart
-        const data = {
-        labels: ['CO1', 'CO2', 'CO3', 'CO4'],
-        datasets: [{
-            label: 'CO Percentage',
-            data: [65, 59, 55, 70],
-            fill: true,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgb(255, 99, 132)',
-            pointBackgroundColor: 'rgb(255, 99, 132)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgb(255, 99, 132)',
-            max: 100,
-        }]
-        };
-
-
-        // Create the spider chart
-        const myChart = new Chart(canvas, {
-        type: 'radar',
-        data: data,
-        options: {
-                elements: {
-                line: {
-                    borderWidth: 3
-                }
-                }
-            },
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
         
-        });
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
+        <script>
+            // Get the canvas element
+            const canvas = document.getElementById('myChart');
 
-       
+            // Create the data for the spider chart
+            const data = {
+            labels: ['CO1', 'CO2', 'CO3', 'CO4'],
+            datasets: [{
+                label: 'CO Percentage',
+                data: [65, 59, 55, 70],
+                fill: true,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255, 99, 132)',
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(255, 99, 132)',
+                max: 100,
+            }]
+            };
 
-      </script>
-    </div>
+
+            // Create the spider chart
+            const myChart = new Chart(canvas, {
+            type: 'radar',
+            data: data,
+            options: {
+                    elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                    }
+                },
+            
+            });
+
+        
+
+        </script>
+    
 {% endblock content %}

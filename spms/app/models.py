@@ -57,7 +57,7 @@ class Section_T(models.Model):
     course = models.ForeignKey(Course_T, on_delete=models.CASCADE, default='N/A')
     faculty = models.ForeignKey(User_T, on_delete=models.CASCADE)
     def __str__(self):
-        return str(self.course)+ ' '+str(self.sectionNo)+ ' ' +str(self.semester)
+        return str(self.course)+ ' Section- '+str(self.sectionNo)+ ' Semester- ' +str(self.semester)
 # Enrollment Table
 class Enrollment_T(models.Model):
     SEMESTER_CHOICES=(
@@ -80,7 +80,7 @@ class PLO_T(models.Model):
     details = models.CharField(max_length=255)
     program = models.ForeignKey(Program_T, on_delete=models.CASCADE)
     def __str__(self):
-        return str(self.ploNo)+ ' ' +str(self.program)
+        return 'PLO'+ str(self.ploNo)+ ' ' +str(self.program)
 # Course Outcome Table
 class CO_T(models.Model):
     coID = models.AutoField(primary_key=True)
@@ -88,10 +88,18 @@ class CO_T(models.Model):
     plo = models.ForeignKey(PLO_T, on_delete=models.CASCADE)
     course = models.ForeignKey(Course_T, on_delete=models.CASCADE)
     def __str__(self):
-        return str(self.coNo)+ ' ' +str(self.plo)+ ' ' +str(self.course)
+        return 'CO'+ str(self.coNo)+ ' ' +str(self.plo)+ ' ' +str(self.course)
 # Assessment Table
 class Assessment_T(models.Model):
+    SEMESTER_CHOICES=(
+        ('Spring', 'Spring'),
+        ('Summer', 'Summer'),
+        ('Autumn', 'Autumn'),
+    )
     assessmentNo = models.AutoField(primary_key=True)
+    studentID = models.ForeignKey(User_T, on_delete = models.CASCADE)
+    semester = models.CharField(max_length=30, choices=SEMESTER_CHOICES, blank=True, null=True)
+    year = models.CharField(max_length=4)
     marks = models.FloatField()
     co = models.ForeignKey(CO_T, on_delete=models.CASCADE)
     section = models.ForeignKey(Section_T, on_delete=models.CASCADE)

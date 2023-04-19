@@ -93,6 +93,8 @@ def home(request):
                     #attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*0.00)
             cgpa = total_cum_credit/attempted_credit
+
+            
             return render(request, 'home/home.html', {  'cgpa': round(cgpa, 2),
                                                         'earned_credit': attempted_credit})
                 
@@ -209,45 +211,7 @@ def genTranscript(request):
             lines.append(f"TOTAL: {round(total_cum_credit, 2)}")
             lines.append(f"ATTEMPTED CREDIT: {attempted_credit}")
             lines.append(f"CGPA: {round(cgpa, 2)}")
-            # lines.append(
-            #     f'Registered Vehicle Owner: {owner.registered_vehicle_owner}')
-            # lines.append(
-            #     f'registered Vehicle Owner ID: {owner.registered_owner_id}')
-            # lines.append(
-            #     f"Registered Owner's Address: {owner.registered_owner_address}")
-            # lines.append(
-            #     f"Registered Vehicle Owner's DOB: {owner.registered_owner_dob}")
-            # lines.append(
-            #     f"Registration Date: {owner.registered_owner_data_create}")
-            # lines.append('')
-            # lines.append(
-            #     '_________________________________________________________________________________________')
-            # lines.append(f"Registered Owned Vehicle(s)")
-            # lines.append(
-            #     '_________________________________________________________________________________________')
-
-            # vehicles = vehicle_license_plate_registration_table.objects.filter(
-            #     registered_owner_id__pk=owner_id)
-
-            # if vehicles:
-            #     for vehicle in vehicles:
-            #         lines.append(f"City Name: {vehicle.city_name}")
-            #         lines.append(
-            #             f"Vehicle Classification: {vehicle.vehicle_classification}")
-            #         lines.append(f"VIN: {vehicle.vin}")
-            #         lines.append(f"Engine CC: {vehicle.engine_cc}")
-            #         lines.append(f"Vehicle Brand: {vehicle.vehicle_brand}")
-            #         lines.append(
-            #             f"Vehicle Registered To: {vehicle.registered_owner_id.registered_vehicle_owner}")
-            #         lines.append('')
-            #     lines.append(
-            #         '_________________________________________________________________________________________')
-            # else:
-            #     lines.append(
-            #         f"{owner.registered_vehicle_owner} has no Registered Vehicle(s)")
-            #     lines.append(
-            #         '_________________________________________________________________________________________')
-            # lines.append(f"Printed by {request.user}")
+            
             # Putting lines in text object
             for line in lines:
                 textobj.textLine(line)
