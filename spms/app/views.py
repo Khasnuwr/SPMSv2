@@ -40,34 +40,108 @@ def login_user(request):
         return render(request, 'login/login.html', {})
 # FUNCTION OF GETTING STUDENT-WISE PLO
 def getPLO(student):
-    plos = Assessment_T.objects.filter(studentID=student)
+    studentT = User_T.objects.get(username=student)
+    if studentT.role != 'Student':
+        return None
+    plos = Assessment_T.objects.all()
     plodata = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+    plodataC = [0,0,0,0,0,0,0,0,0,0,0,0]
     for plo in plos:
-        # print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks}')
-        if int(plo.co.plo.ploNo) == 1:
-            plodata[0] = plo.marks
-        if int(plo.co.plo.ploNo) == 2:
-            plodata[1] = plo.marks
-        if int(plo.co.plo.ploNo) == 3:
-            plodata[2] = plo.marks
-        if int(plo.co.plo.ploNo) == 4:
-            plodata[3] = plo.marks
-        if int(plo.co.plo.ploNo) == 5:
-            plodata[4] = plo.marks
-        if int(plo.co.plo.ploNo) == 6:
-            plodata[5] = plo.marks
-        if int(plo.co.plo.ploNo) == 7:
-            plodata[6] = plo.marks
-        if int(plo.co.plo.ploNo) == 8:
-            plodata[7] = plo.marks
-        if int(plo.co.plo.ploNo) == 9:
-            plodata[8] = plo.marks
-        if int(plo.co.plo.ploNo) == 10:
-            plodata[9] = plo.marks
-        if int(plo.co.plo.ploNo) == 11:
-            plodata[10] = plo.marks
-        if int(plo.co.plo.ploNo) == 12:
-            plodata[11] = plo.marks
+        print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
+        if plo.studentID.username == studentT.username:
+            print(plo.studentID.username, studentT.username)
+            # print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
+            if int(plo.co.plo.ploNo) == 1:
+                plodata[0] += plo.marks
+                plodataC[0]+=1
+            if int(plo.co.plo.ploNo) == 2:
+                plodata[1] += plo.marks
+                plodataC[1]+=1
+            if int(plo.co.plo.ploNo) == 3:
+                plodata[2] += plo.marks
+                plodataC[2]+=1
+            if int(plo.co.plo.ploNo) == 4:
+                plodata[3] += plo.marks
+                plodataC[3]+=1
+            if int(plo.co.plo.ploNo) == 5:
+                plodata[4] += plo.marks
+                plodataC[4]+=1
+            if int(plo.co.plo.ploNo) == 6:
+                plodata[5] += plo.marks
+                plodataC[5]+=1
+            if int(plo.co.plo.ploNo) == 7:
+                plodata[6] += plo.marks
+                plodataC[6]+=1
+            if int(plo.co.plo.ploNo) == 8:
+                plodata[7] += plo.marks
+                plodataC[7]+=1
+            if int(plo.co.plo.ploNo) == 9:
+                plodata[8] += plo.marks
+                plodataC[8]+=1
+            if int(plo.co.plo.ploNo) == 10:
+                plodata[9] += plo.marks
+                plodataC[9]+=1
+            if int(plo.co.plo.ploNo) == 11:
+                plodata[10] += plo.marks
+                plodataC[10]+=1
+            if int(plo.co.plo.ploNo) == 12:
+                plodata[11] += plo.marks
+                plodataC[11]+=1
+    for itr in range(0, 12, 1):
+        try:
+            plodata[itr] = plodata[itr]/plodataC[itr]
+        except:
+            plodata[itr] = plodata[itr]/1
+        print(plodata[itr])
+    return plodata
+# FUNCTION OF GETTING DEPARTMENT-WISE PLO
+def getDeptWisePLO(dept):
+    plodata = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+    plodataC = [0,0,0,0,0,0,0,0,0,0,0,0]
+    plos = Assessment_T.objects.all()
+    for plo in plos:
+        if plo.studentID.department.departmentID == dept:
+            if int(plo.co.plo.ploNo) == 1:
+                plodata[0] += plo.marks
+                plodataC[0]+=1
+            if int(plo.co.plo.ploNo) == 2:
+                plodata[1] += plo.marks
+                plodataC[1]+=1
+            if int(plo.co.plo.ploNo) == 3:
+                plodata[2] += plo.marks
+                plodataC[2]+=1
+            if int(plo.co.plo.ploNo) == 4:
+                plodata[3] += plo.marks
+                plodataC[3]+=1
+            if int(plo.co.plo.ploNo) == 5:
+                plodata[4] += plo.marks
+                plodataC[4]+=1
+            if int(plo.co.plo.ploNo) == 6:
+                plodata[5] += plo.marks
+                plodataC[5]+=1
+            if int(plo.co.plo.ploNo) == 7:
+                plodata[6] += plo.marks
+                plodataC[6]+=1
+            if int(plo.co.plo.ploNo) == 8:
+                plodata[7] += plo.marks
+                plodataC[7]+=1
+            if int(plo.co.plo.ploNo) == 9:
+                plodata[8] += plo.marks
+                plodataC[8]+=1
+            if int(plo.co.plo.ploNo) == 10:
+                plodata[9] += plo.marks
+                plodataC[9]+=1
+            if int(plo.co.plo.ploNo) == 11:
+                plodata[10] += plo.marks
+                plodataC[10]+=1
+            if int(plo.co.plo.ploNo) == 12:
+                plodata[11] += plo.marks
+                plodataC[11]+=1
+    for itr in range(0, 12, 1):
+        try:
+            plodata[itr] = plodata[itr]/plodataC[itr]
+        except:
+            plodata[itr] = plodata[itr]/1
     return plodata
 # FUNCTION STUDENT-COURSE-WISE CO
 def studentAndCourseWiseCO(student, courseT):
@@ -151,8 +225,17 @@ def home(request):
                                                         'earned_credit': attempted_credit,
                                                         'plo': getPLO(request.user),
                                                         })
+        # IF THE USER IS FACULTY
         if request.user.role == 'Faculty':
-            pass 
+            ploS = None
+            if request.method == 'POST':
+                try:
+                    student = User_T.objects.get(username=request.POST['searchStudent'])
+                    ploS = getPLO(student)
+                except:
+                    pass
+            return render(request, 'home/home.html', {  'plo': getDeptWisePLO(request.user.department.departmentID),
+                                                        'ploStudent': ploS})
         return render(request, 'home/home.html', {})
     else:
         return redirect('login')

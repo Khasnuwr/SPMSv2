@@ -1,19 +1,29 @@
-<div>
-    <canvas id="myChart"></canvas>
-</div>
+<form action="" method="POST" class="row g-3 p-3"> {% csrf_token %}
+    <div class="col-md-6">
+      <input class="form-control" placeholder="Student ID eg:1830398" type="text" name="searchStudent" id="">
+    </div>
+    <div class="col-6">
+      <button style="width: fit-content;" class="btn btn-dark" type="submit">Search</button>
+    </div>   
+</form>
+{% if ploStudent != None %}
+  <!-- <h5 class="card-title">CO Analysis</h5> -->
+  <div>
+    <canvas id="myChart1"></canvas>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <script>
       // Get the canvas element
-      const canvas = document.getElementById('myChart');
+      const canvas1 = document.getElementById('myChart1');
 
       // Create the data for the spider chart
-      const data = {
+      const data1 = {
       labels: ['PLO1', 'PLO2', 'PLO3', 'PLO4', 'PLO5', 'PLO6', 'PLO7', 'PLO8', 'PLO9', 'PLO10', 'PLO11', 'PLO12'],
       datasets: [{
-          label: 'PLO Percentage of {{user.department}}',
-          data: {{plo}},
+          label: 'PLO Percentage',
+          data: {{ploStudent}},
           fill: true,
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
           borderColor: 'rgb(255, 99, 132)',
@@ -27,13 +37,13 @@
 
 
       // Create the spider chart
-      const myChart = new Chart(canvas, {
+      const myChart1 = new Chart(canvas1, {
       type: 'radar',
-      data: data,
+      data: data1,
       options: {
               elements: {
               line: {
-                  borderWidth: 3
+                  borderWidth: 1
               }
               }
           },
@@ -43,3 +53,4 @@
   
 
   </script>
+{% endif %}
