@@ -38,7 +38,53 @@ def login_user(request):
                                      'Wrong username or password')
                 return redirect('login')
         return render(request, 'login/login.html', {})
-
+# FUNCTION OF GETTING STUDENT-WISE PLO
+def getPLO(student):
+    plos = Assessment_T.objects.filter(studentID=student)
+    plodata = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+    for plo in plos:
+        # print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks}')
+        if int(plo.co.plo.ploNo) == 1:
+            plodata[0] = plo.marks
+        if int(plo.co.plo.ploNo) == 2:
+            plodata[1] = plo.marks
+        if int(plo.co.plo.ploNo) == 3:
+            plodata[2] = plo.marks
+        if int(plo.co.plo.ploNo) == 4:
+            plodata[3] = plo.marks
+        if int(plo.co.plo.ploNo) == 5:
+            plodata[4] = plo.marks
+        if int(plo.co.plo.ploNo) == 6:
+            plodata[5] = plo.marks
+        if int(plo.co.plo.ploNo) == 7:
+            plodata[6] = plo.marks
+        if int(plo.co.plo.ploNo) == 8:
+            plodata[7] = plo.marks
+        if int(plo.co.plo.ploNo) == 9:
+            plodata[8] = plo.marks
+        if int(plo.co.plo.ploNo) == 10:
+            plodata[9] = plo.marks
+        if int(plo.co.plo.ploNo) == 11:
+            plodata[10] = plo.marks
+        if int(plo.co.plo.ploNo) == 12:
+            plodata[11] = plo.marks
+    return plodata
+# FUNCTION STUDENT-COURSE-WISE CO
+def studentAndCourseWiseCO(student, courseT):
+    cos = Assessment_T.objects.filter(studentID=student)
+    codata = [0.00, 0.00, 0.00, 0.00]
+    for co in cos:
+        if co.co.course.courseID.lower() == courseT.lower():
+            print(co.marks)
+            if co.co.coNo == 1:
+                codata[0] = co.marks
+            if co.co.coNo == 2:
+                codata[1] = co.marks
+            if co.co.coNo == 3:
+                codata[2] = co.marks
+            if co.co.coNo == 4:
+                codata[3] = co.marks
+    return codata
 # Displaying Home Page Function
 def home(request):
     if request.user.is_authenticated:
@@ -95,9 +141,18 @@ def home(request):
             cgpa = total_cum_credit/attempted_credit
 
             
+            if request.method == 'POST':
+                co = studentAndCourseWiseCO(request.user, request.POST['searchCourse'])
+                return render(request, 'home/home.html', {  'cgpa': round(cgpa, 2),
+                                                        'earned_credit': attempted_credit,
+                                                        'plo': getPLO(request.user),
+                                                        'co': co})
             return render(request, 'home/home.html', {  'cgpa': round(cgpa, 2),
-                                                        'earned_credit': attempted_credit})
-                
+                                                        'earned_credit': attempted_credit,
+                                                        'plo': getPLO(request.user),
+                                                        })
+        if request.user.role == 'Faculty':
+            pass 
         return render(request, 'home/home.html', {})
     else:
         return redirect('login')
@@ -226,26 +281,6 @@ def genTranscript(request):
             return redirect('home')
     else:
         return redirect('login')
-# Displaying Student Wise PLO Table (ONLY Student will access it)
-def studentWisePlo(request):
-    if request.user.is_authenticated:
-        if request.user.role == 'Student':
-            return render(request, 'student/ploTable.html', {})
-        else:
-            return redirect('home')
-    else:
-        return redirect('login')
-
-# Displaying Course Wise CO Analysis
-def studentCourseWiseCO(request):
-    if request.user.is_authenticated:
-        if request.user.role == 'Student':
-            return render(request, 'student/coCourse.html', {})
-        else:
-            return redirect('home')
-    else:
-        return redirect('login')
-
 # Displaying Grade input Form For Faculty
 def gradeInputForm(request):
     if request.user.is_authenticated:

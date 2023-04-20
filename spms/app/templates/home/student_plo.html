@@ -1,0 +1,45 @@
+<div>
+    <canvas id="myChart"></canvas>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+      // Get the canvas element
+      const canvas = document.getElementById('myChart');
+
+      // Create the data for the spider chart
+      const data = {
+      labels: ['PLO1', 'PLO2', 'PLO3', 'PLO4', 'PLO5', 'PLO6', 'PLO7', 'PLO8', 'PLO9', 'PLO10', 'PLO11', 'PLO12'],
+      datasets: [{
+          label: 'PLO Percentage',
+          data: {{plo}},
+          fill: true,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgb(255, 99, 132)',
+          pointBackgroundColor: 'rgb(255, 99, 132)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgb(255, 99, 132)',
+          
+      }]
+      };
+
+
+      // Create the spider chart
+      const myChart = new Chart(canvas, {
+      type: 'radar',
+      data: data,
+      options: {
+              elements: {
+              line: {
+                  borderWidth: 3
+              }
+              }
+          },
+      
+      });
+
+  
+
+  </script>

@@ -1,0 +1,56 @@
+<form action="" method="POST" class="row g-3 p-3"> {% csrf_token %}
+    <div class="col-md-6">
+      <input class="form-control" placeholder="Course ID eg- CSE101" type="text" name="searchCourse" id="">
+    </div>
+    <div class="col-6">
+      <button style="width: fit-content;" class="btn btn-dark" type="submit">Search</button>
+    </div>   
+</form>
+{% if co != None %}
+  <!-- <h5 class="card-title">CO Analysis</h5> -->
+  <div>
+    <canvas id="myChart1"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+      // Get the canvas element
+      const canvas1 = document.getElementById('myChart1');
+
+      // Create the data for the spider chart
+      const data1 = {
+      labels: ['CO1', 'CO2', 'CO3', 'CO4'],
+      datasets: [{
+          label: 'CO Percentage',
+          data: {{co}},
+          fill: true,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgb(255, 99, 132)',
+          pointBackgroundColor: 'rgb(255, 99, 132)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgb(255, 99, 132)',
+          
+      }]
+      };
+
+
+      // Create the spider chart
+      const myChart1 = new Chart(canvas1, {
+      type: 'radar',
+      data: data1,
+      options: {
+              elements: {
+              line: {
+                  borderWidth: 1
+              }
+              }
+          },
+      
+      });
+
+  
+
+  </script>
+{% endif %}

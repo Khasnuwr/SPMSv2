@@ -17,7 +17,7 @@
           </div>
           <div class="col">
             <div class="card" style="width: 18rem;">
-                <div class="card-body">
+                <div class="card-body btn-dark">
                   <h5 class="card-title">Academic Information</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Department Name: {{user.department}}</h6>
                   <p class="card-text">School Name: {{user.department.schoolID}}</p>
@@ -46,7 +46,7 @@
         
         <div class="row">
           <hr style="margin-top: 2rem; margin-bottom: 2rem;">
-          <a class="btn btn-success" href="{% url 'transcript' %}">Get Transcript</a>
+          <a class="btn btn-dark" href="{% url 'transcript' %}">Get Transcript</a>
           <hr style="margin-top: 2rem; margin-bottom: 2rem;">
         </div>
         <div class="row">
@@ -54,51 +54,7 @@
             <div class="card" >
               <div class="card-body">
                   <h5 class="card-title">PLO Analysis</h5>
-                  <div>
-                    <canvas id="myChart"></canvas>
-                  </div>
-                
-                  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                  
-                  <script>
-                      // Get the canvas element
-                      const canvas = document.getElementById('myChart');
-          
-                      // Create the data for the spider chart
-                      const data = {
-                      labels: ['PLO1', 'PLO2', 'PLO3', 'PLO4', 'PLO5', 'PLO6', 'PLO7', 'PLO8', 'PLO9', 'PLO10', 'PLO11', 'PLO12'],
-                      datasets: [{
-                          label: 'PLO Percentage',
-                          data: [65, 65, 65, 65, 25, 65, 75 , 85, 10, 15, 32, 36],
-                          fill: true,
-                          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                          borderColor: 'rgb(255, 99, 132)',
-                          pointBackgroundColor: 'rgb(255, 99, 132)',
-                          pointBorderColor: '#fff',
-                          pointHoverBackgroundColor: '#fff',
-                          pointHoverBorderColor: 'rgb(255, 99, 132)',
-                          
-                      }]
-                      };
-          
-          
-                      // Create the spider chart
-                      const myChart = new Chart(canvas, {
-                      type: 'radar',
-                      data: data,
-                      options: {
-                              elements: {
-                              line: {
-                                  borderWidth: 3
-                              }
-                              }
-                          },
-                      
-                      });
-          
-                  
-          
-                  </script>
+                  {% include 'home/student_plo.html' %}
               </div>
             </div>
           </div>
@@ -106,17 +62,23 @@
             <div class="card" >
               <div class="card-body">
                   <h5 class="card-title">Course-wise CO Analysis</h5>
-                  <form action="" method="POST" class="row g-3 p-3"> {% csrf_token %}
-                      <div class="col-md-12">
-                        <input class="form-control" placeholder="Course Name" type="text" name="searchCourse" id="">
-                      </div>
-                      <div class="col-12">
-                        <button class="btn btn-success" type="submit">Search</button>
-                      </div>
-                        
-                  </form>
+                  {% include 'home/student_co.html' %}
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    {% if user.role == 'Faculty' %}
+      <div class="row">
+        <div class="col">
+          <div class="card" style="width: ;">
+              <div class="card-body">
+                  <h5 class="card-title">Overall PLO Analysis</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">-</h6>
+                  <p class="card-text">-</p>
+                  {% include 'home/facultyHome.html' %}
+              </div>
           </div>
         </div>
       </div>

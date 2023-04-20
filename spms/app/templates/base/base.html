@@ -14,7 +14,7 @@
 
     <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href=".">Students Performance Monitoring System</a>
+          <a class="navbar-brand" href="{% url 'home' %}">Students Performance Monitoring System</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -26,19 +26,10 @@
             </div>
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                </li>
                 {% if user.role == 'Student' %}
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'plo' %}">PLO Achievement Table</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'co-course' %}">Course Wise CO Analysis</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">PLO Analysis</a>
-                  </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">Registration</a>
                   </li>
