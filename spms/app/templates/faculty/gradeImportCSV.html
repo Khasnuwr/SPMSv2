@@ -10,14 +10,15 @@
         </div>
       {% endfor %}
     {% endif %}
+    <hr>
    <center><h4>Import from CSV file</h4></center>
    <section class="container my-2 bg-dark w-50 text-light p-2">
+      
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="csv_file">
         <button class="btn btn-success" type="submit">Import</button>
       </form>
    </section>
-
   </div>
 {% endblock content %} 

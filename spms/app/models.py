@@ -53,6 +53,7 @@ class Section_T(models.Model):
     )
     sectionID = models.CharField(max_length=255, primary_key=True, null=False, blank=False)
     sectionNo = models.IntegerField(default=1)
+    year = models.CharField(max_length=4, default='2022')
     semester = models.CharField(max_length=30, choices=SEMESTER_CHOICES)
     course = models.ForeignKey(Course_T, on_delete=models.CASCADE, default='N/A')
     faculty = models.ForeignKey(User_T, on_delete=models.CASCADE)

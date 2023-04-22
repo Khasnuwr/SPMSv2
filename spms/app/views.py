@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import *
 from .forms import *
 
 import pandas as pd
-
+# Importing Datetime
+import datetime
 # File Response
 from django.http import FileResponse
 # i/o buffer
@@ -16,7 +18,8 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter, A4
 # Report Lab Table
 from reportlab.platypus import TableStyle, SimpleDocTemplate, Image, Table
-
+# Importing CSV Module
+import csv
 # Logout User Function
 def logout_user(request):
     logout(request)
@@ -431,6 +434,134 @@ def gradeInputFromCSV(request):
                     success = 'danger'
                     messages.add_message(request, messages.SUCCESS, 'GRADE Submission Failed!')
             return render(request, 'faculty/gradeImportCSV.html', {'success': success})
+        else:
+            return redirect('home')
+    else:
+        return redirect('login')
+
+# Generate OBE Report Format CSV FOR Faculty
+def generate_obe_format(request):
+    if request.user.is_authenticated:
+        if request.user.role == 'Faculty':
+            if request.method == 'POST':
+                response = HttpResponse(content_type='text/csv')
+                response['Content-Disposition'] = f'attachment; filename=report_dated_{datetime.date.today()}.csv'
+                
+                # Create CSV Writer
+                writer = csv.writer(response)
+                # Write Heading Row
+                writer.writerow(['STUDENT_ID',
+                        'YEAR',
+                        'SEMESTER',   
+                        'COURSE',
+                        'SECTION',
+                        'CO1',
+                        'CO2',
+                        'CO3',
+                        'CO4',
+                        'GRADE',
+                        ])
+                if request.method == 'POST':
+                    students = Enrollment_T.objects.filter(year=request.POST['year'])
+                    for student in students:
+                        if student.section.semester == request.POST['semester'] and student.section.faculty.username == request.user.username:
+                            # Write the Data on each rows
+                            writer.writerow([
+                                student.student.username,
+                                student.section.year,
+                                student.section.semester,
+                                student.section.course,
+                                student.section.sectionNo,
+                                '',
+                                '',
+                                '',
+                                '',
+                                '',
+                                ])
+                        
+                return response
+            return render(request, 'faculty/getOBEFormat.html', {})
+        else:
+            return redirect('home')
+    else:
+        return redirect('login')
+# Generate OBE Report of Course in CSV FOR Faculty
+def generate_obe_csv(request):
+    if request.user.is_authenticated:
+        if request.user.role == 'Faculty':
+            if request.method == 'POST':
+                response = HttpResponse(content_type='text/csv')
+                response['Content-Disposition'] = f'attachment; filename=OBE_{datetime.date.today()}.csv'
+                
+                # Create CSV Writer
+                
+                # Write Heading Row
+                print(request.user.is_superuser)
+                header = ['STUDENT_ID',
+                        'YEAR',
+                        'SEMESTER',   
+                        'COURSE',
+                        'SECTION',
+                        'CO1',
+                        'CO2',
+                        'CO3',
+                        'CO4',
+                        ]
+                writer = csv.DictWriter(response, fieldnames = header)
+                writer.writeheader()
+                students = Assessment_T.objects.filter(year=request.POST['year'])
+                for student in students:
+                    if student.section.semester == request.POST['semester'] and student.section.faculty.username == request.user.username and student.section.course.courseID == request.POST['course']:
+                        # Write the Data on each rows
+                        # writer.writerow([
+                        #     student.studentID.username,
+                        #     student.section.year,
+                        #     student.section.semester,
+                        #     student.section.course,
+                        #     student.section.sectionNo,
+                        #     student.marks,
+                        #     "",
+                        #     None,
+                        #     None,
+                        # ])
+                        if student.co.coNo == 1:
+                            writer.writerow({
+                                'STUDENT_ID': student.studentID.username,
+                                'YEAR': student.section.year,
+                                'SEMESTER': student.section.semester,
+                                'COURSE': student.section.course,
+                                'SECTION': student.section.sectionNo,
+                                'CO1': student.marks,
+                            })
+                        if student.co.coNo == 2:
+                            writer.writerow({
+                                'STUDENT_ID': student.studentID.username,
+                                'YEAR': student.section.year,
+                                'SEMESTER': student.section.semester,
+                                'COURSE': student.section.course,
+                                'SECTION': student.section.sectionNo,
+                                'CO2': student.marks,
+                            })
+                        if student.co.coNo == 3:
+                            writer.writerow({
+                                'STUDENT_ID': student.studentID.username,
+                                'YEAR': student.section.year,
+                                'SEMESTER': student.section.semester,
+                                'COURSE': student.section.course,
+                                'SECTION': student.section.sectionNo,
+                                'CO3': student.marks,
+                            })
+                        if student.co.coNo == 4:
+                            writer.writerow({
+                                'STUDENT_ID': student.studentID.username,
+                                'YEAR': student.section.year,
+                                'SEMESTER': student.section.semester,
+                                'COURSE': student.section.course,
+                                'SECTION': student.section.sectionNo,
+                                'CO4': student.marks,
+                            })
+                return response
+            return render(request, 'faculty/getOBECourse.html', {'courses': Section_T.objects.filter(faculty=request.user)})
         else:
             return redirect('home')
     else:

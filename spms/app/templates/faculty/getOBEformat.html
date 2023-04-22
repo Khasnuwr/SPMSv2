@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+{% block title %} | OBE Format {% endblock title %}
+{% block content %} 
+   <div class="container-fluid py-3">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{success}} alert-dismissible fade show" role="alert">
+          {{message}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <center><h5>Generate OBE Format</h5></center>
+    <section class="container my-2 bg-dark w-50 text-light p-2">
+    
+        <form action="" method="POST" class="row g-3 p-3">
+            {% csrf_token %}
+            
+            <div class="col-md-6">
+                <label for="validationDefault01" class="form-label">Educational Year</label>
+                <input type="number" name="year" class="form-control" id="validationDefault01" value="" required>
+            </div>
+            <div class="col-md-6">
+                <label for="inputState" class="form-label">Educational Semester</label>
+                <select id="inputState" name="semester" class="form-select">
+                <option>Select Semester</option>
+                <option>Spring</option>
+                <option>Summer</option>
+                <option>Autumn</option>
+                </select>
+            </div>
+            <div class="col-12">
+            <button type="submit" class="btn btn-primary">Get</button>
+            </div>
+        </form>
+    </section>
+
+  </div>
+{% endblock content %} 
