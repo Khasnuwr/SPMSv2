@@ -196,9 +196,10 @@ def home(request):
                     #course = Course_T.objects.get(pk=grade.course)
                     #attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*0.00)
-            cgpa = total_cum_credit/attempted_credit
-
-            
+            try:
+                cgpa = total_cum_credit/attempted_credit
+            except:
+                cgpa = 0.0
             if request.method == 'POST':
                 co = studentAndCourseWiseCO(request.user, request.POST['searchCourse'])
                 return render(request, 'home/home.html', {  'cgpa': round(cgpa, 2),
@@ -327,7 +328,10 @@ def genTranscript(request):
                     total_cum_credit+=float(int(course.creditNo)*0.00)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  0.00                    F                  {float(int(course.creditNo)*0.00)}")
-            cgpa = total_cum_credit/attempted_credit
+            try:
+                cgpa = total_cum_credit/attempted_credit
+            except:
+                cgpa = 0.0
             lines.append(
                 '___________________________________________________________________________________________')
             lines.append(f"TOTAL: {round(total_cum_credit, 2)}")
@@ -381,77 +385,84 @@ def gradeInputForm(request):
     else:
         return redirect('login')
 # Import Grades from CSV file
+from io import TextIOWrapper
 def gradeInputFromCSV(request):
     if request.user.is_authenticated:
         if request.user.role == 'Faculty':
             success = 'success'
             if request.method == 'POST':
                 csv_file = request.FILES['csv_file']
-                data_frame = pd.read_csv(csv_file, index_col=False, iterator=True)
-                #print(data_frame['YEAR'][0])
+                #data_frame = pd.read_csv(csv_file, index_col=False, iterator=True)
+                data_frame = csv.reader(TextIOWrapper(csv_file, encoding='utf-8'))
+                print(data_frame)
                 try:
                     for row in data_frame:
-                        print(str(row['STUDENT_ID'][0])+' '+ str(row['YEAR'][0]))
-                        # student = User_T.objects.raw(
-                        #         "SELECT * FROM app_user_t WHERE username=%s", [str(row['STUDENT_ID'][0])]
-                        # )
-                        # courseT = Course_T.objects.raw(
-                        #     "SELECT * FROM course_t WHERE courseID = %s", [row['COURSE'][0]]
-                        # )
-                        # Need fixing ^
-                        student = User_T.objects.get(username=str(row['STUDENT_ID'][0]))
-                        courseT = Course_T.objects.get(pk=str(row['COURSE'][0]))
-                        data = CourseGrade_T(studentID=student,
-                            eduYear=str(row['YEAR'][0]),
-                            eduSemester=str(row['SEMESTER'][0]),
-                            course=courseT,
-                            section=str(row['SECTION'][0]),
-                            grade=str(row['GRADE'][0])
-                        )
-                        data.save()
-                        cos = CO_T.objects.filter(course=courseT)
-                        for cot in cos:
-                            if cot.coNo == 1:
-                                form = Assessment_T(
-                                    studentID=student,
-                                    semester=str(row['SEMESTER'][0]),
-                                    year=str(row['YEAR'][0]),
-                                    marks=str(row['CO1'][0]),
-                                    co=cot,
-                                    section=Section_T.objects.filter(sectionNo=str(row['SECTION'][0]), course=courseT)[0]
-                                )
-                                form.save()
-                            if cot.coNo == 2:
-                                form = Assessment_T(
-                                    studentID=student,
-                                    semester=str(row['SEMESTER'][0]),
-                                    year=str(row['YEAR'][0]),
-                                    marks=str(row['CO2'][0]),
-                                    co=cot,
-                                    section=Section_T.objects.filter(sectionNo=str(row['SECTION'][0]), course=courseT)[0]
-                                )
-                                form.save()
-                            if cot.coNo == 3:
-                                form = Assessment_T(
-                                    studentID=student,
-                                    semester=str(row['SEMESTER'][0]),
-                                    year=str(row['YEAR'][0]),
-                                    marks=str(row['CO3'][0]),
-                                    co=cot,
-                                    section=Section_T.objects.filter(sectionNo=str(row['SECTION'][0]), course=courseT)[0]
-                                )
-                                form.save()
-                            if cot.coNo == 4:
-                                form = Assessment_T(
-                                    studentID=student,
-                                    semester=str(row['SEMESTER'][0]),
-                                    year=str(row['YEAR'][0]),
-                                    marks=str(row['CO4'][0]),
-                                    co=cot,
-                                    section=Section_T.objects.filter(sectionNo=str(row['SECTION'][0]), course=courseT)[0]
-                                )
-                                form.save()
-                        messages.add_message(request, messages.SUCCESS, 'GRADE Submission Successful')
+                        print(row)
+                        try:
+                            # student = User_T.objects.raw(
+                            #         "SELECT * FROM app_user_t WHERE username=%s", [str(row[0])]
+                            # )
+                            # courseT = Course_T.objects.raw(
+                            #     "SELECT * FROM course_t WHERE courseID = %s", [row[0]]
+                            # )
+                            # Need fixing ^
+                            student = User_T.objects.get(username=str(row[0]))
+                            courseT = Course_T.objects.get(pk=str(row[3]))
+                            
+                            print('touches')
+                            data = CourseGrade_T(studentID=student,
+                                eduYear=str(row[1]),
+                                eduSemester=str(row[2]),
+                                course=courseT,
+                                section=str(row[4]),
+                                grade=str(row[9])
+                            )
+                            data.save()
+                            cos = CO_T.objects.filter(course=courseT)
+                            for cot in cos:
+                                if cot.coNo == 1 and str(row[5]) != '':
+                                    form = Assessment_T(
+                                        studentID=student,
+                                        semester=str(row[2]),
+                                        year=str(row[1]),
+                                        marks=str(row[5]),
+                                        co=cot,
+                                        section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                    )
+                                    form.save()
+                                if cot.coNo == 2 and str(row[6]) != '':
+                                    form = Assessment_T(
+                                        studentID=student,
+                                        semester=str(row[2]),
+                                        year=str(row[1]),
+                                        marks=str(row[6]),
+                                        co=cot,
+                                        section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                    )
+                                    form.save()
+                                if cot.coNo == 3 and str(row[7]) != '':
+                                    form = Assessment_T(
+                                        studentID=student,
+                                        semester=str(row[2]),
+                                        year=str(row[1]),
+                                        marks=str(row[7]),
+                                        co=cot,
+                                        section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                    )
+                                    form.save()
+                                if cot.coNo == 4 and str(row[8]) != '':
+                                    form = Assessment_T(
+                                        studentID=student,
+                                        semester=str(row[2]),
+                                        year=str(row[1]),
+                                        marks=str(row[8]),
+                                        co=cot,
+                                        section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                    )
+                                    form.save()
+                        except:
+                            pass
+                    messages.add_message(request, messages.SUCCESS, 'GRADE Submission Successful')
 
                 except:
                     success = 'danger'
