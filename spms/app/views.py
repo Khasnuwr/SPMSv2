@@ -48,7 +48,6 @@ def getPLO(student):
         return None
     plos = Assessment_T.objects.all()
     plodata = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-    plodataC = [0,0,0,0,0,0,0,0,0,0,0,0]
     for plo in plos:
         print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
         if plo.studentID.username == studentT.username:
@@ -56,46 +55,28 @@ def getPLO(student):
             # print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
             if int(plo.co.plo.ploNo) == 1:
                 plodata[0] += plo.marks
-                plodataC[0]+=1
             if int(plo.co.plo.ploNo) == 2:
                 plodata[1] += plo.marks
-                plodataC[1]+=1
             if int(plo.co.plo.ploNo) == 3:
                 plodata[2] += plo.marks
-                plodataC[2]+=1
             if int(plo.co.plo.ploNo) == 4:
                 plodata[3] += plo.marks
-                plodataC[3]+=1
             if int(plo.co.plo.ploNo) == 5:
                 plodata[4] += plo.marks
-                plodataC[4]+=1
             if int(plo.co.plo.ploNo) == 6:
                 plodata[5] += plo.marks
-                plodataC[5]+=1
             if int(plo.co.plo.ploNo) == 7:
                 plodata[6] += plo.marks
-                plodataC[6]+=1
             if int(plo.co.plo.ploNo) == 8:
                 plodata[7] += plo.marks
-                plodataC[7]+=1
             if int(plo.co.plo.ploNo) == 9:
                 plodata[8] += plo.marks
-                plodataC[8]+=1
             if int(plo.co.plo.ploNo) == 10:
                 plodata[9] += plo.marks
-                plodataC[9]+=1
             if int(plo.co.plo.ploNo) == 11:
                 plodata[10] += plo.marks
-                plodataC[10]+=1
             if int(plo.co.plo.ploNo) == 12:
                 plodata[11] += plo.marks
-                plodataC[11]+=1
-    for itr in range(0, 12, 1):
-        try:
-            plodata[itr] = plodata[itr]/plodataC[itr]
-        except:
-            plodata[itr] = plodata[itr]/1
-        print(plodata[itr])
     return plodata
 # FUNCTION OF GETTING DEPARTMENT-WISE PLO
 def getDeptWisePLO(dept):
@@ -420,7 +401,6 @@ def gradeInputFromCSV(request):
                         # Need fixing ^
                         student = User_T.objects.get(username=str(row['STUDENT_ID'][0]))
                         courseT = Course_T.objects.get(pk=str(row['COURSE'][0]))
-                        
                         data = CourseGrade_T(studentID=student,
                             eduYear=str(row['YEAR'][0]),
                             eduSemester=str(row['SEMESTER'][0]),
@@ -429,7 +409,50 @@ def gradeInputFromCSV(request):
                             grade=str(row['GRADE'][0])
                         )
                         data.save()
+                        cos = CO_T.objects.filter(course=courseT)
+                        for cot in cos:
+                            if cot.coNo == 1:
+                                form = Assessment_T(
+                                    studentID=student,
+                                    semester=str(row['SEMESTER'][0]),
+                                    year=str(row['YEAR'][0]),
+                                    marks=str(row['CO1'][0]),
+                                    co=cot,
+                                    section=Section_T.objects.filter(sectionNo=str(row['SECTION'][0]), course=courseT)[0]
+                                )
+                                form.save()
+                            if cot.coNo == 2:
+                                form = Assessment_T(
+                                    studentID=student,
+                                    semester=str(row['SEMESTER'][0]),
+                                    year=str(row['YEAR'][0]),
+                                    marks=str(row['CO2'][0]),
+                                    co=cot,
+                                    section=Section_T.objects.filter(sectionNo=str(row['SECTION'][0]), course=courseT)[0]
+                                )
+                                form.save()
+                            if cot.coNo == 3:
+                                form = Assessment_T(
+                                    studentID=student,
+                                    semester=str(row['SEMESTER'][0]),
+                                    year=str(row['YEAR'][0]),
+                                    marks=str(row['CO3'][0]),
+                                    co=cot,
+                                    section=Section_T.objects.filter(sectionNo=str(row['SECTION'][0]), course=courseT)[0]
+                                )
+                                form.save()
+                            if cot.coNo == 4:
+                                form = Assessment_T(
+                                    studentID=student,
+                                    semester=str(row['SEMESTER'][0]),
+                                    year=str(row['YEAR'][0]),
+                                    marks=str(row['CO4'][0]),
+                                    co=cot,
+                                    section=Section_T.objects.filter(sectionNo=str(row['SECTION'][0]), course=courseT)[0]
+                                )
+                                form.save()
                         messages.add_message(request, messages.SUCCESS, 'GRADE Submission Successful')
+
                 except:
                     success = 'danger'
                     messages.add_message(request, messages.SUCCESS, 'GRADE Submission Failed!')
@@ -507,6 +530,9 @@ def generate_obe_csv(request):
                         'CO3',
                         'CO4',
                         ]
+                co1 = None
+                co2 = None
+                co3 = None
                 writer = csv.DictWriter(response, fieldnames = header)
                 writer.writeheader()
                 students = Assessment_T.objects.filter(year=request.POST['year'])
@@ -525,41 +551,27 @@ def generate_obe_csv(request):
                         #     None,
                         # ])
                         if student.co.coNo == 1:
-                            writer.writerow({
-                                'STUDENT_ID': student.studentID.username,
-                                'YEAR': student.section.year,
-                                'SEMESTER': student.section.semester,
-                                'COURSE': student.section.course,
-                                'SECTION': student.section.sectionNo,
-                                'CO1': student.marks,
-                            })
+                            co1 = student.marks
                         if student.co.coNo == 2:
-                            writer.writerow({
-                                'STUDENT_ID': student.studentID.username,
-                                'YEAR': student.section.year,
-                                'SEMESTER': student.section.semester,
-                                'COURSE': student.section.course,
-                                'SECTION': student.section.sectionNo,
-                                'CO2': student.marks,
-                            })
+                            co2 = student.marks
                         if student.co.coNo == 3:
-                            writer.writerow({
-                                'STUDENT_ID': student.studentID.username,
-                                'YEAR': student.section.year,
-                                'SEMESTER': student.section.semester,
-                                'COURSE': student.section.course,
-                                'SECTION': student.section.sectionNo,
-                                'CO3': student.marks,
-                            })
+                            co3 = student.marks
                         if student.co.coNo == 4:
+                            co4 = student.marks
                             writer.writerow({
                                 'STUDENT_ID': student.studentID.username,
                                 'YEAR': student.section.year,
                                 'SEMESTER': student.section.semester,
                                 'COURSE': student.section.course,
                                 'SECTION': student.section.sectionNo,
+                                'CO1': co1,
+                                'CO2': co2,
+                                'CO3': co3,
                                 'CO4': student.marks,
                             })
+                del co1
+                del co2
+                del co3
                 return response
             return render(request, 'faculty/getOBECourse.html', {'courses': Section_T.objects.filter(faculty=request.user)})
         else:
