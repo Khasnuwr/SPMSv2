@@ -34,7 +34,7 @@
                     <a class="nav-link" href="#">Registration</a>
                   </li>
                 {% endif %}
-                {% if user.role == 'Faculty' or user.role == 'Admin' %}
+                {% if user.role == 'Faculty' %}
                   <li class="nav-item" ><a class="nav-link" href="{% url 'grade-input' %}">Grade Input</a></li>
                   <li class="nav-item" ><a class="nav-link" href="{% url 'grade-input-csv' %}">Grade Input from CSV</a></li>
                   <li class="nav-item"><a class="nav-link" href="{% url 'generate-obe-format' %}">OBE Format</a></li>
@@ -43,18 +43,20 @@
                   <li class="nav-item"> <a class="nav-link" href="#">Course</a></li>
                 {% endif %}
                 {% if user.role == 'Admin' %}
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Admin
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      Add Course
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                      <li><a class="dropdown-item" href="#">Action</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                      <li>
-                        <hr class="dropdown-divider">
-                      </li>
-                      <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      Add Section
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="">
+                      Update CO-PLO Mapping
+                    </a>
                   </li>
                 {% endif %}
                 <li class="nav-item">
