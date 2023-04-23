@@ -6,6 +6,8 @@ urlpatterns = [
     path('', home, name='home'),
     path('login/', login_user, name='login'),
     path('logout/', logout_user, name='logout'),
+    # Admin Path
+    path('notice-page/', admin_page, name='notice-page'),
     # Faculty Path
     path('grade-input/', gradeInputForm, name='grade-input'),
     path('grade-input-csv/', gradeInputFromCSV, name='grade-input-csv'),

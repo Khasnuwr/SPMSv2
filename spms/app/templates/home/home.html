@@ -93,6 +93,19 @@
           </div>
         </div>
       </div>
-      
+    {% endif %}
+    {% if user.role == 'Admin' %}
+      <div class="row">
+        <center>
+        <div class="col">
+          <div class="card" style="width: 50%;">
+            <div class="card-body">
+              <h5 class="card-title">Department-wise PLO Analysis</h5>
+              {% include 'home/admin_home.html' %}
+            </div>
+          </div>
+        </div>
+      </center>
+      </div>
     {% endif %}
 {% endblock content %}

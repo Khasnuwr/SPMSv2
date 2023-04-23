@@ -221,6 +221,12 @@ def home(request):
                     pass
             return render(request, 'home/home.html', {  'plo': getDeptWisePLO(request.user.department.departmentID),
                                                         'ploStudent': ploS})
+        
+        if request.user.role == 'Admin':
+            departments=Department_T.objects.all()
+            if request.method == 'POST':
+                return render(request, 'home/home.html', {  'ploDepartment': getDeptWisePLO(request.POST['department']),})
+            return render(request, 'home/home.html', { 'departments': departments})
         return render(request, 'home/home.html', {})
     else:
         return redirect('login')
@@ -585,6 +591,15 @@ def generate_obe_csv(request):
                 del co3
                 return response
             return render(request, 'faculty/getOBECourse.html', {'courses': Section_T.objects.filter(faculty=request.user)})
+        else:
+            return redirect('home')
+    else:
+        return redirect('login')
+# Admin Part
+def admin_page(request):
+    if request.user.is_authenticated:
+        if request.user.role == 'Admin':
+            return render(request, 'admin/notice_page.html', {})
         else:
             return redirect('home')
     else:

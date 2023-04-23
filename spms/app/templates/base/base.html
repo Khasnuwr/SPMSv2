@@ -44,17 +44,17 @@
                 {% endif %}
                 {% if user.role == 'Admin' %}
                   <li class="nav-item">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href="{% url 'notice-page' %}">
                       Add Course
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href="{% url 'notice-page' %}">
                       Add Section
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href="{% url 'notice-page' %}">
                       Update CO-PLO Mapping
                     </a>
                   </li>

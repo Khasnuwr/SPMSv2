@@ -1,0 +1,57 @@
+<form action="" method="POST">  {% csrf_token %}
+    <label for="inputState" class="">Select Department</label>
+    <select id="inputState" name="department" class="form-select col-md-6" style="width: 50%;">
+      {% for department in departments %}
+        <option value="{{ department.departmentID }}">{{ department }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-dark col-6" type="submit">Get PLO</button>
+</form>
+{% if ploDepartment != None %}
+  <!-- <h5 class="card-title">CO Analysis</h5> -->
+  <div>
+    <canvas id="myChart1"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+      // Get the canvas element
+      const canvas1 = document.getElementById('myChart1');
+
+      // Create the data for the spider chart
+      const data1 = {
+      labels: ['PLO1', 'PLO2', 'PLO3', 'PLO4', 'PLO5', 'PLO6', 'PLO7', 'PLO8', 'PLO9', 'PLO10', 'PLO11', 'PLO12'],
+      datasets: [{
+          label: 'PLO Percentage',
+          data: {{ploDepartment}},
+          fill: true,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgb(255, 99, 132)',
+          pointBackgroundColor: 'rgb(255, 99, 132)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgb(255, 99, 132)',
+          
+      }]
+      };
+
+
+      // Create the spider chart
+      const myChart1 = new Chart(canvas1, {
+      type: 'radar',
+      data: data1,
+      options: {
+              elements: {
+              line: {
+                  borderWidth: 1
+              }
+              }
+          },
+      
+      });
+
+  
+
+  </script>
+{% endif %}
