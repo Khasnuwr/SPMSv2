@@ -160,7 +160,8 @@ def home(request):
 
             for grade in grades:
                 if grade.grade == 'A':
-                    course = Course_T.objects.get(pk=grade.course)
+                    #course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw('SELECT * FROM app_course_t WHERE course_courseID = %s;', [grade.course])
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*4.00)
                 elif grade.grade == 'A-':
@@ -168,7 +169,8 @@ def home(request):
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*3.70)
                 elif grade.grade == 'B+':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw('SELECT * FROM app_course_t WHERE course_courseID = %s;', [grade.course])
+                    print("touched")
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*3.30)
                 elif grade.grade == 'B':
