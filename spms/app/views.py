@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import *
 from .forms import *
-
+from django.db import connection
 import pandas as pd
 # Importing Datetime
 import datetime
@@ -46,44 +46,48 @@ def getPLO(student):
     studentT = User_T.objects.get(username=student)
     if studentT.role != 'Student':
         return None
-    plos = Assessment_T.objects.all()
+    # filtering the PLOs where the assessment_t has the studentid we needed
+    plos = Assessment_T.objects.filter(studentID=studentT).raw('SELECT * FROM app_assessment_t WHERE studentID_id = %s;', [studentT.id])
     plodata = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
     for plo in plos:
         print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
-        if plo.studentID.username == studentT.username:
-            print(plo.studentID.username, studentT.username)
-            # print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
-            if int(plo.co.plo.ploNo) == 1:
-                plodata[0] += plo.marks
-            if int(plo.co.plo.ploNo) == 2:
-                plodata[1] += plo.marks
-            if int(plo.co.plo.ploNo) == 3:
-                plodata[2] += plo.marks
-            if int(plo.co.plo.ploNo) == 4:
-                plodata[3] += plo.marks
-            if int(plo.co.plo.ploNo) == 5:
-                plodata[4] += plo.marks
-            if int(plo.co.plo.ploNo) == 6:
-                plodata[5] += plo.marks
-            if int(plo.co.plo.ploNo) == 7:
-                plodata[6] += plo.marks
-            if int(plo.co.plo.ploNo) == 8:
-                plodata[7] += plo.marks
-            if int(plo.co.plo.ploNo) == 9:
-                plodata[8] += plo.marks
-            if int(plo.co.plo.ploNo) == 10:
-                plodata[9] += plo.marks
-            if int(plo.co.plo.ploNo) == 11:
-                plodata[10] += plo.marks
-            if int(plo.co.plo.ploNo) == 12:
-                plodata[11] += plo.marks
+        #if plo.studentID.username == studentT.username:
+        print(plo.studentID.username, studentT.username)
+        # print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
+        if int(plo.co.plo.ploNo) == 1:
+            plodata[0] += plo.marks
+        if int(plo.co.plo.ploNo) == 2:
+            plodata[1] += plo.marks
+        if int(plo.co.plo.ploNo) == 3:
+            plodata[2] += plo.marks
+        if int(plo.co.plo.ploNo) == 4:
+            plodata[3] += plo.marks
+        if int(plo.co.plo.ploNo) == 5:
+            plodata[4] += plo.marks
+        if int(plo.co.plo.ploNo) == 6:
+            plodata[5] += plo.marks
+        if int(plo.co.plo.ploNo) == 7:
+            plodata[6] += plo.marks
+        if int(plo.co.plo.ploNo) == 8:
+            plodata[7] += plo.marks
+        if int(plo.co.plo.ploNo) == 9:
+            plodata[8] += plo.marks
+        if int(plo.co.plo.ploNo) == 10:
+            plodata[9] += plo.marks
+        if int(plo.co.plo.ploNo) == 11:
+            plodata[10] += plo.marks
+        if int(plo.co.plo.ploNo) == 12:
+            plodata[11] += plo.marks
     return plodata
 # FUNCTION OF GETTING DEPARTMENT-WISE PLO
 def getDeptWisePLO(dept):
     plodata = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
     plodataC = [0,0,0,0,0,0,0,0,0,0,0,0]
-    plos = Assessment_T.objects.all()
+    # Get all the assessments from the assessment_t
+    plos = Assessment_T.objects.raw('SELECT * FROM app_assessment_t;')
+
     for plo in plos:
+        # Filter all the Assessments from the assessment_t by Department
         if plo.studentID.department.departmentID == dept:
             if int(plo.co.plo.ploNo) == 1:
                 plodata[0] += plo.marks
@@ -129,9 +133,11 @@ def getDeptWisePLO(dept):
     return plodata
 # FUNCTION STUDENT-COURSE-WISE CO
 def studentAndCourseWiseCO(student, courseT):
-    cos = Assessment_T.objects.filter(studentID=student)
+    # Filter all the Assessments from Assessment_T table by student_id
+    cos = Assessment_T.objects.raw("SELECT * FROM app_assessment_t WHERE studentID_id = %s ;", [student.id])
     codata = [0.00, 0.00, 0.00, 0.00]
     for co in cos:
+        # Filter all the Filtered assignments by the course_id by chaining Assignment chaining CO chaining course_id
         if co.co.course.courseID.lower() == courseT.lower():
             print(co.marks)
             if co.co.coNo == 1:
@@ -147,7 +153,8 @@ def studentAndCourseWiseCO(student, courseT):
 def home(request):
     if request.user.is_authenticated:
         if request.user.role == 'Student':
-            grades = CourseGrade_T.objects.filter(studentID=request.user)
+            # Get all the grades from CourseGrade_T filtered by a specific student_id
+            grades = CourseGrade_T.objects.raw("SELECT * FROM app_coursegrade_t WHERE studentID_id = %s;", [request.user.id])
             attempted_credit = 0
             total_cum_credit = 0
 
