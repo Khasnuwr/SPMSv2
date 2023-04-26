@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% block title %} | Import From CSV {% endblock title %}
 {% block content %} 
    <div class="container-fluid py-3">
@@ -10,14 +11,24 @@
         </div>
       {% endfor %}
     {% endif %}
-    <hr>
+
    <center><h4>Import from CSV file</h4></center>
-   <section class="container my-2 bg-dark w-50 text-light p-2">
+   <section class="container my-2 bg-dark text-light p-2">
       
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="csv_file">
-        <button class="btn btn-success" type="submit">Import</button>
+        <div class="d-flex flex-md-column align-items-center justify-content-center">
+          <img style="width: 80px; height: 80px;" src="{% static 'image/csv.png' %}" alt="csv"> 
+          <input class="mt-4 mb-4" type="file" name="csv_file">
+        </div>
+        
+        
+        
+        <button class="form-control d-flex w-25 mx-auto btn btn-success justify-content-center" type="submit">Import</button>
+        
+        
+        
+        
       </form>
    </section>
   </div>

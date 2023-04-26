@@ -43,16 +43,18 @@ def login_user(request):
         return render(request, 'login/login.html', {})
 # FUNCTION OF GETTING STUDENT-WISE PLO
 def getPLO(student):
-    studentT = User_T.objects.get(username=student)
-    if studentT.role != 'Student':
+    # studentT = User_T.objects.get(username=student)
+    student = User_T.objects.raw("SELECT id FROM app_user_t WHERE username=%s;", [student])[0]
+    if student.role != 'Student':
         return None
+    print(student.username)
     # filtering the PLOs where the assessment_t has the studentid we needed
-    plos = Assessment_T.objects.filter(studentID=studentT).raw('SELECT * FROM app_assessment_t WHERE studentID_id = %s;', [studentT.id])
+    plos = Assessment_T.objects.raw('SELECT * FROM app_assessment_t WHERE studentID_id = %s;', [student.id])
     plodata = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
     for plo in plos:
         print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
         #if plo.studentID.username == studentT.username:
-        print(plo.studentID.username, studentT.username)
+        print(plo.studentID.username, student.username)
         # print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
         if int(plo.co.plo.ploNo) == 1:
             plodata[0] += plo.marks
@@ -161,44 +163,43 @@ def home(request):
             for grade in grades:
                 if grade.grade == 'A':
                     #course = Course_T.objects.get(pk=grade.course)
-                    course = Course_T.objects.raw('SELECT * FROM app_course_t WHERE course_courseID = %s;', [grade.course])
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*4.00)
                 elif grade.grade == 'A-':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*3.70)
                 elif grade.grade == 'B+':
-                    course = Course_T.objects.raw('SELECT * FROM app_course_t WHERE course_courseID = %s;', [grade.course])
-                    print("touched")
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*3.30)
                 elif grade.grade == 'B':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*3.00)
                 elif grade.grade == 'B-':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*2.70)
                 elif grade.grade == 'C+':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*2.30)
                 elif grade.grade == 'C':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*2.00)
                 elif grade.grade == 'C-':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*1.70)
                 elif grade.grade == 'D+':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*1.30)
                 elif grade.grade == 'D':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*1.00)
                 elif grade.grade == 'F':
@@ -213,28 +214,28 @@ def home(request):
                 co = studentAndCourseWiseCO(request.user, request.POST['searchCourse'])
                 return render(request, 'home/home.html', {  'cgpa': round(cgpa, 2),
                                                         'earned_credit': attempted_credit,
-                                                        'plo': getPLO(request.user),
+                                                        'plo': getPLO(request.user.username),
                                                         'co': co})
             return render(request, 'home/home.html', {  'cgpa': round(cgpa, 2),
                                                         'earned_credit': attempted_credit,
-                                                        'plo': getPLO(request.user),
+                                                        'plo': getPLO(request.user.username),
                                                         })
         # IF THE USER IS FACULTY
         if request.user.role == 'Faculty':
             ploS = None
             if request.method == 'POST':
                 try:
-                    student = User_T.objects.get(username=request.POST['searchStudent'])
-                    ploS = getPLO(student)
+                    ploS = getPLO(request.POST['searchStudent'])
                 except:
                     pass
             return render(request, 'home/home.html', {  'plo': getDeptWisePLO(request.user.department.departmentID),
                                                         'ploStudent': ploS})
         
         if request.user.role == 'Admin':
-            departments=Department_T.objects.all()
+            departments=Department_T.objects.raw("SELECT * FROM app_department_t;")
             if request.method == 'POST':
-                return render(request, 'home/home.html', {  'ploDepartment': getDeptWisePLO(request.POST['department']),})
+                return render(request, 'home/home.html', {  'ploDepartment': getDeptWisePLO(request.POST['department']),
+                                                            'departments': departments})
             return render(request, 'home/home.html', { 'departments': departments})
         return render(request, 'home/home.html', {})
     else:
@@ -252,7 +253,7 @@ def genTranscript(request):
             textobj.setFont('Times-Roman', 10)
 
             # Get object of that student ID
-            student = User_T.objects.get(username=request.user.username)
+            student = User_T.objects.raw("SELECT * FROM app_user_t WHERE username=%s;", [request.user.username])[0]
             # Create Empty List of lines
             lines = []
             # Append the data in the list of lines
@@ -270,69 +271,68 @@ def genTranscript(request):
                 'COURSE ID            SEMESTER              YEAR                CREDIT            GPA            GRADE             TOTAL')
             lines.append(
                 '___________________________________________________________________________________________')
-            grades = CourseGrade_T.objects.filter(studentID=request.user)
+            # Get All the Course's grades filtered by student id
+            grades = CourseGrade_T.objects.raw("SELECT * FROM app_coursegrade_t WHERE studentID_id = %s;", [request.user.id])
             attempted_credit = 0
             total_cum_credit = 0
 
             for grade in grades:
                 if grade.grade == 'A':
-                    course = Course_T.objects.get(pk=grade.course)
-
-                    
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*4.00)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  4.00                    A                  {float(int(course.creditNo)*4.00)}")
                 elif grade.grade == 'A-':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*3.70)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  3.70                    A-                  {round(float(int(course.creditNo)*3.70), 2)}")
                 elif grade.grade == 'B+':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*3.30)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  3.30                    B+                  {round(float(int(course.creditNo)*3.30), 2)}")
                 elif grade.grade == 'B':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*3.00)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  3.00                    B                  {float(int(course.creditNo)*3.00)}")
                 elif grade.grade == 'B-':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*2.70)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  2.70                    B-                  {round(float(int(course.creditNo)*2.70), 2)}")
                 elif grade.grade == 'C+':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*2.30)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  2.30                    C+                  {round(float(int(course.creditNo)*2.30), 2)}")
                 elif grade.grade == 'C':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*2.00)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  2.00                    C                  {float(int(course.creditNo)*2.00)}")
                 elif grade.grade == 'C-':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*1.70)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  1.70                    C-                  {round(float(int(course.creditNo)*1.70), 2)}")
                 elif grade.grade == 'D+':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*1.30)
 
                     lines.append(f"{course.courseID}                        {grade.eduSemester}                       {grade.eduYear}                     {course.creditNo}                  1.30                    D+                  {round(float(int(course.creditNo)*1.30), 2)}")
                 elif grade.grade == 'D':
-                    course = Course_T.objects.get(pk=grade.course)
+                    course = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [grade.course.courseID])[0]
                     attempted_credit+=int(course.creditNo)
                     total_cum_credit+=float(int(course.creditNo)*1.00)
 
@@ -375,8 +375,10 @@ def gradeInputForm(request):
             form = GradeInputForm()
             if request.method == 'POST': 
                 try:
-                    student_ID = User_T.objects.get(username=request.POST['studentID'])
-                    courseT = Course_T.objects.get(pk=request.POST['course'])
+                    # Filter the student from user_t table by Student_ID
+                    student_ID = User_T.objects.raw("SELECT * FROM app_user_t WHERE username=%s;", [request.POST['studentID']])[0]
+                    # Filter the Course from the course_t by Course_ID
+                    courseT = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [request.POST['course']])[0]
                     form = CourseGrade_T(
                         studentID = student_ID,
                         eduYear = request.POST['eduYear'],
@@ -414,16 +416,12 @@ def gradeInputFromCSV(request):
                     for row in data_frame:
                         print(row)
                         try:
-                            # student = User_T.objects.raw(
-                            #         "SELECT * FROM app_user_t WHERE username=%s", [str(row[0])]
-                            # )
-                            # courseT = Course_T.objects.raw(
-                            #     "SELECT * FROM course_t WHERE courseID = %s", [row[0]]
-                            # )
-                            # Need fixing ^
-                            student = User_T.objects.get(username=str(row[0]))
-                            courseT = Course_T.objects.get(pk=str(row[3]))
-                            
+                            # student = User_T.objects.get(username=str(row[0]))
+                            # Get the student object filtering Student_ID importing from CSV data_frame
+                            student = User_T.objects.raw("SELECT * FROM app_user_t WHERE username=%s;", [str(row[0])])[0]
+                            # courseT = Course_T.objects.get(pk=str(row[3]))
+                            # Getting Course Object filtering course_ID importing from CSV data_frame
+                            courseT = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [str(row[3])])[0] 
                             print('touches')
                             data = CourseGrade_T(studentID=student,
                                 eduYear=str(row[1]),
@@ -442,7 +440,10 @@ def gradeInputFromCSV(request):
                                         year=str(row[1]),
                                         marks=str(row[5]),
                                         co=cot,
-                                        section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                        # section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                        # Filtering section by section number AND course_id
+                                        section=Section_T.objects.raw("SELECT * FROM app_section_t WHERE sectionNo=%s AND course_id=%s LIMIT 1;", [str(row[4]), courseT.courseID])[0]
+                                        
                                     )
                                     form.save()
                                 if cot.coNo == 2 and str(row[6]) != '':
@@ -452,7 +453,9 @@ def gradeInputFromCSV(request):
                                         year=str(row[1]),
                                         marks=str(row[6]),
                                         co=cot,
-                                        section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                        # section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                        # Filtering section by section number AND course_id
+                                        section=Section_T.objects.raw("SELECT * FROM app_section_t WHERE sectionNo=%s AND course_id=%s LIMIT 1;", [str(row[4]), courseT.courseID])[0]
                                     )
                                     form.save()
                                 if cot.coNo == 3 and str(row[7]) != '':
@@ -462,7 +465,9 @@ def gradeInputFromCSV(request):
                                         year=str(row[1]),
                                         marks=str(row[7]),
                                         co=cot,
-                                        section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                        # section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                        # Filtering section by section number AND course_id
+                                        section=Section_T.objects.raw("SELECT * FROM app_section_t WHERE sectionNo=%s AND course_id=%s LIMIT 1;", [str(row[4]), courseT.courseID])[0]
                                     )
                                     form.save()
                                 if cot.coNo == 4 and str(row[8]) != '':
@@ -472,7 +477,9 @@ def gradeInputFromCSV(request):
                                         year=str(row[1]),
                                         marks=str(row[8]),
                                         co=cot,
-                                        section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                        # section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
+                                        # Filtering section by section number AND course_id
+                                        section=Section_T.objects.raw("SELECT * FROM app_section_t WHERE sectionNo=%s AND course_id=%s LIMIT 1;", [str(row[4]), courseT.courseID])[0]
                                     )
                                     form.save()
                         except:
@@ -498,7 +505,7 @@ def generate_obe_format(request):
                 
                 # Create CSV Writer
                 writer = csv.writer(response)
-                # Write Heading Row
+                # Write Heading Row's columns
                 writer.writerow(['STUDENT_ID',
                         'YEAR',
                         'SEMESTER',   
@@ -511,10 +518,12 @@ def generate_obe_format(request):
                         'GRADE',
                         ])
                 if request.method == 'POST':
-                    students = Enrollment_T.objects.filter(year=request.POST['year'])
+                    # Get all the Enrollments from Enrollment_T table filtered with the inserted year OR filtered with specific year and store it as student
+                    students = Enrollment_T.objects.raw("SELECT * FROM app_enrollment_t WHERE year=%s;", [request.POST['year']])
                     for student in students:
+                        # Filter the Enrollment's section's semester and section's appointed faculty 
                         if student.section.semester == request.POST['semester'] and student.section.faculty.username == request.user.username:
-                            # Write the Data on each rows
+                            # Write the Data on each rows which has these corresponding columns -> student_id, year, semester, course, section_no, co1, co2, co3, co4
                             writer.writerow([
                                 student.student.username,
                                 student.section.year,
@@ -561,21 +570,11 @@ def generate_obe_csv(request):
                 co3 = None
                 writer = csv.DictWriter(response, fieldnames = header)
                 writer.writeheader()
-                students = Assessment_T.objects.filter(year=request.POST['year'])
+                # Get all the assessments from assessment_t filtering by the inserted year by Faculty User
+                students = Assessment_T.objects.raw("SELECT * FROM app_assessment_t WHERE year=%s;", [request.POST['year']])
                 for student in students:
+                    # Filtering assessments by the inserted semester and the Faculty User who is assigned to the section
                     if student.section.semester == request.POST['semester'] and student.section.faculty.username == request.user.username and student.section.course.courseID == request.POST['course']:
-                        # Write the Data on each rows
-                        # writer.writerow([
-                        #     student.studentID.username,
-                        #     student.section.year,
-                        #     student.section.semester,
-                        #     student.section.course,
-                        #     student.section.sectionNo,
-                        #     student.marks,
-                        #     "",
-                        #     None,
-                        #     None,
-                        # ])
                         if student.co.coNo == 1:
                             co1 = student.marks
                         if student.co.coNo == 2:
@@ -599,7 +598,8 @@ def generate_obe_csv(request):
                 del co2
                 del co3
                 return response
-            return render(request, 'faculty/getOBECourse.html', {'courses': Section_T.objects.filter(faculty=request.user)})
+                # Get all the courses with corresponding Sections which were assigned to the current logged in Faculty User 
+            return render(request, 'faculty/getOBECourse.html', {'courses': Section_T.objects.raw("SELECT * FROM app_section_t WHERE faculty_id=%s;", [request.user.id]) })
         else:
             return redirect('home')
     else:
