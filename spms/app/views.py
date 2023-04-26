@@ -416,10 +416,8 @@ def gradeInputFromCSV(request):
                     for row in data_frame:
                         print(row)
                         try:
-                            # student = User_T.objects.get(username=str(row[0]))
                             # Get the student object filtering Student_ID importing from CSV data_frame
                             student = User_T.objects.raw("SELECT * FROM app_user_t WHERE username=%s;", [str(row[0])])[0]
-                            # courseT = Course_T.objects.get(pk=str(row[3]))
                             # Getting Course Object filtering course_ID importing from CSV data_frame
                             courseT = Course_T.objects.raw("SELECT * FROM app_course_t WHERE courseID = %s;", [str(row[3])])[0] 
                             print('touches')
@@ -440,7 +438,6 @@ def gradeInputFromCSV(request):
                                         year=str(row[1]),
                                         marks=str(row[5]),
                                         co=cot,
-                                        # section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
                                         # Filtering section by section number AND course_id
                                         section=Section_T.objects.raw("SELECT * FROM app_section_t WHERE sectionNo=%s AND course_id=%s LIMIT 1;", [str(row[4]), courseT.courseID])[0]
                                         
@@ -453,7 +450,6 @@ def gradeInputFromCSV(request):
                                         year=str(row[1]),
                                         marks=str(row[6]),
                                         co=cot,
-                                        # section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
                                         # Filtering section by section number AND course_id
                                         section=Section_T.objects.raw("SELECT * FROM app_section_t WHERE sectionNo=%s AND course_id=%s LIMIT 1;", [str(row[4]), courseT.courseID])[0]
                                     )
@@ -465,7 +461,6 @@ def gradeInputFromCSV(request):
                                         year=str(row[1]),
                                         marks=str(row[7]),
                                         co=cot,
-                                        # section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
                                         # Filtering section by section number AND course_id
                                         section=Section_T.objects.raw("SELECT * FROM app_section_t WHERE sectionNo=%s AND course_id=%s LIMIT 1;", [str(row[4]), courseT.courseID])[0]
                                     )
@@ -477,7 +472,6 @@ def gradeInputFromCSV(request):
                                         year=str(row[1]),
                                         marks=str(row[8]),
                                         co=cot,
-                                        # section=Section_T.objects.filter(sectionNo=str(row[4]), course=courseT)[0]
                                         # Filtering section by section number AND course_id
                                         section=Section_T.objects.raw("SELECT * FROM app_section_t WHERE sectionNo=%s AND course_id=%s LIMIT 1;", [str(row[4]), courseT.courseID])[0]
                                     )
