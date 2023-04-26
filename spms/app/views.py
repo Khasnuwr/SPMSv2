@@ -429,7 +429,9 @@ def gradeInputFromCSV(request):
                                 grade=str(row[9])
                             )
                             data.save()
-                            cos = CO_T.objects.filter(course=courseT)
+                            # cos = CO_T.objects.filter(course=courseT)
+                            # Filter all the COs by the CourseID
+                            cos = CO_T.objects.raw("SELECT * FROM app_co_t WHERE course_id=%s;", [courseT.courseID])
                             for cot in cos:
                                 if cot.coNo == 1 and str(row[5]) != '':
                                     form = Assessment_T(
