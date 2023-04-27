@@ -408,8 +408,9 @@ def gradeInputFromCSV(request):
         if request.user.role == 'Faculty':
             success = 'success'
             if request.method == 'POST':
+                # Getting the CSV file as data frame from the Html form's input
                 csv_file = request.FILES['csv_file']
-                #data_frame = pd.read_csv(csv_file, index_col=False, iterator=True)
+                # Getting the as 2 Dimensional List
                 data_frame = csv.reader(TextIOWrapper(csv_file, encoding='utf-8'))
                 print(data_frame)
                 try:
@@ -429,7 +430,6 @@ def gradeInputFromCSV(request):
                                 grade=str(row[9])
                             )
                             data.save()
-                            # cos = CO_T.objects.filter(course=courseT)
                             # Filter all the COs by the CourseID
                             cos = CO_T.objects.raw("SELECT * FROM app_co_t WHERE course_id=%s;", [courseT.courseID])
                             for cot in cos:
@@ -497,7 +497,7 @@ def generate_obe_format(request):
         if request.user.role == 'Faculty':
             if request.method == 'POST':
                 response = HttpResponse(content_type='text/csv')
-                response['Content-Disposition'] = f'attachment; filename=report_dated_{datetime.date.today()}.csv'
+                response['Content-Disposition'] = f'attachment; filename=OBE_Format_dated_{datetime.date.today()}.csv'
                 
                 # Create CSV Writer
                 writer = csv.writer(response)
@@ -566,11 +566,12 @@ def generate_obe_csv(request):
                 co3 = None
                 writer = csv.DictWriter(response, fieldnames = header)
                 writer.writeheader()
-                # Get all the assessments from assessment_t filtering by the inserted year by Faculty User
-                students = Assessment_T.objects.raw("SELECT * FROM app_assessment_t WHERE year=%s;", [request.POST['year']])
+                # Get all the assessments from assessment_t filtering by the inserted "YEAR" and "SEMESTER" by Faculty User
+                students = Assessment_T.objects.raw("SELECT * FROM app_assessment_t WHERE year=%s AND semester=%s;", [request.POST['year'], request.POST['semester']])
+                
                 for student in students:
-                    # Filtering assessments by the inserted semester and the Faculty User who is assigned to the section
-                    if student.section.semester == request.POST['semester'] and student.section.faculty.username == request.user.username and student.section.course.courseID == request.POST['course']:
+                    # Filtering assessments by the inserted "COURSE_ID" and the "Faculty User" from User_T who is assigned to the section AND logged in at the same time
+                    if student.section.faculty.username == request.user.username and student.section.course.courseID == request.POST['course']:
                         if student.co.coNo == 1:
                             co1 = student.marks
                         if student.co.coNo == 2:

@@ -44,11 +44,11 @@
                 {% endif %}
                 {% if user.role == 'Admin' %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'notice-page' %}">
-                      Add Course
+                    <a class="nav-link" href="/admin/">
+                      Admin Panel
                     </a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a class="nav-link" href="{% url 'notice-page' %}">
                       Add Section
                     </a>
@@ -57,7 +57,7 @@
                     <a class="nav-link" href="{% url 'notice-page' %}">
                       Update CO-PLO Mapping
                     </a>
-                  </li>
+                  </li> -->
                 {% endif %}
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a>
