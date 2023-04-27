@@ -33,7 +33,7 @@
                 <label for="inputState" class="form-label">Enrolled course</label>
                 <select id="inputState" name="course" class="form-select">
                 {% for course in courses %}
-                    <option value="{{ course.course.courseID }}">{{ course.course.courseID }}</option>
+                    <option value="{{ course.course.courseID }}">{{ course.course.courseID }} Section-{{ course.sectionNo }} Semester-{{ course.semester }} Year-{{course.year}}</option>
                 {% endfor %}
                 <!-- <option>CSE303</option>
                 <option>CSE301</option>
