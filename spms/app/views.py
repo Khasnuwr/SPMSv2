@@ -534,7 +534,7 @@ def generate_obe_format(request):
                                 ])
                         
                 return response
-            return render(request, 'faculty/getOBEFormat.html', {})
+            return render(request, 'faculty/getOBEformat.html', {})
         else:
             return redirect('home')
     else:

@@ -4,8 +4,10 @@
 2. Faculty Dashboard, Import Grades and COs by uploading CSV, Department PLO, Student-wise PLOs, Generate Course-wise OBE Report as CSV
 ![](https://i.imgur.com/WABgalp.gif)
 ![](https://i.imgur.com/gpCO6UQ.gif)
+![](https://i.imgur.com/f9fwrX0.gif)
 3. Admin Dashboard, Check Department-wise PLOs(From Each Schools)
 ![](https://i.imgur.com/xIWUGUe.gif)
+
 
 
 If you wish to check the Website
