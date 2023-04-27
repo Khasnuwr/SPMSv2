@@ -43,19 +43,15 @@ def login_user(request):
         return render(request, 'login/login.html', {})
 # FUNCTION OF GETTING STUDENT-WISE PLO
 def getPLO(student):
-    # studentT = User_T.objects.get(username=student)
     student = User_T.objects.raw("SELECT id FROM app_user_t WHERE username=%s;", [student])[0]
     if student.role != 'Student':
         return None
     print(student.username)
-    # filtering the PLOs where the assessment_t has the studentid we needed
+    # Filtering the PLOs where the assessment_t has the student_id we needed
     plos = Assessment_T.objects.raw('SELECT * FROM app_assessment_t WHERE studentID_id = %s;', [student.id])
     plodata = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
     for plo in plos:
-        print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
-        #if plo.studentID.username == studentT.username:
-        print(plo.studentID.username, student.username)
-        # print(f'PLO{plo.co.plo.ploNo} CO{plo.co.coNo} {plo.marks} {plo.studentID}')
+        # Inserting all the PLOs in the array of 12 of the FILTERED "STUDENT_ID"
         if int(plo.co.plo.ploNo) == 1:
             plodata[0] += plo.marks
         if int(plo.co.plo.ploNo) == 2:
