@@ -9,7 +9,7 @@
 
 
 If you wish to check the Website
-feel free to ![here](https://spmsv3.up.railway.app/)
+feel free to visit [here]:   https://spmsv3.up.railway.app/
 
 For Student User
 1.  User ID=1830398, Password=1830398
