@@ -15,8 +15,8 @@ feel free to visit [here](https://spmsv3.onrender.com/)
 
 For Student User
 1.  User ID=1830398, Password=1830398
-2.  User ID=1830360, Password=1830360
-3.  User ID=1831124, Password=1831124
+2.  User ID=1831124, Password=1831124
+3.  User ID=1830360, Password=1830360
 4.  User ID=1820080, Password=1820080
 5.  User ID=1930661, Password=1930661
 6.  User ID=2021937, Password=2021937
